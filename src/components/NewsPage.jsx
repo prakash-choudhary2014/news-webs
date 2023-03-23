@@ -119,7 +119,7 @@ const NewsPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [category, setCategory] = useState('general');
 
-  const API_KEY = 'xY4eld4d3OtYJxdkWH7ZHFemcg5RRUdz5f8B2xLpxlU';
+  const API_KEY = 'yo9Kd3JNjg3kcan07MEwc8scR144mithdk2CIdflZ3o';
   const BASE_URL = 'https://api.newscatcherapi.com/v2/';
 
   useEffect(() => {
