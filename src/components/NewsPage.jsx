@@ -109,25 +109,49 @@
 
 
 
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import NewsCard from './NewsCard';
+  import React, { useState, useEffect } from 'react';
+  import axios from 'axios';
+  import NewsCard from './NewsCard';
 
-const NewsPage = () => {
-  const [articles, setArticles] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [category, setCategory] = useState('general');
+  const NewsPage = () => {
+    const [articles, setArticles] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [category, setCategory] = useState('general');
 
-  const API_KEY = 'yo9Kd3JNjg3kcan07MEwc8scR144mithdk2CIdflZ3o';
-  const BASE_URL = 'https://api.newscatcherapi.com/v2/';
+    const API_KEY = 'yo9Kd3JNjg3kcan07MEwc8scR144mithdk2CIdflZ3o';
+    const BASE_URL = 'https://api.newscatcherapi.com/v2/';
 
-  useEffect(() => {
-    setIsLoading(true);
-    const fetchArticles = async () => {
+    useEffect(() => {
+      setIsLoading(true);
+      const fetchArticles = async () => {
+        try {
+          const response = await axios.get(
+            `${BASE_URL}search?q=${category}&lang=en&sort_by=relevancy&page=1`,
+            {
+              headers: {
+                'x-api-key': API_KEY,
+              },
+            }
+          );
+          setArticles(response.data.articles);
+          setIsLoading(false);
+        } catch (error) {
+          console.log(error);
+          setIsLoading(false);
+        }
+      };
+      fetchArticles();
+    }, [category]);
+
+
+    //for searching by keywords
+    const handleSearch = async (event) => {
+      event.preventDefault();
+      setIsLoading(true);
       try {
         const response = await axios.get(
-          `${BASE_URL}search?q=${category}&lang=en&sort_by=relevancy&page=1`,
+          `${BASE_URL}search?q=${searchQuery}&lang=en&sort_by=relevancy&page=1`,
           {
             headers: {
               'x-api-key': API_KEY,
@@ -141,86 +165,73 @@ const NewsPage = () => {
         setIsLoading(false);
       }
     };
-    fetchArticles();
-  }, [category]);
+
+    //for searching by category
+    const handleCategoryChange = (event) => {
+      setCategory(event.target.value);
+    };
 
 
-  //for searching by keywords
-  const handleSearch = async (event) => {
-    event.preventDefault();
-    setIsLoading(true);
-    try {
-      const response = await axios.get(
-        `${BASE_URL}search?q=${searchQuery}&lang=en&sort_by=relevancy&page=1`,
-        {
-          headers: {
-            'x-api-key': API_KEY,
-          },
-        }
-      );
-      setArticles(response.data.articles);
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-      setIsLoading(false);
-    }
-  };
-
-  //for searching by category
-  const handleCategoryChange = (event) => {
-    setCategory(event.target.value);
-  };
-
-  return (
-    // Search bar and filter bar
     
-    <div className="news-container">
-      <div className='cat-key'>
-      <form onSubmit={handleSearch}>
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search by keywords..."
-            value={searchQuery}
-            onChange={(event) => setSearchQuery(event.target.value)}
-          />
-          <button type="submit" className="search-button">
-            Search
-          </button>
-        </div>
-      </form>
+    const truncateDescription = (description) => {
+      const words = description.split(" ");
+      if (words.length > 24) {
+        return words.slice(0, 24).join(" ") + " ...";
+      } else {
+        return description;
+      }
+    };
 
-      <div className="filter-container">
-        <label htmlFor="category">Filter by category:</label>
-        <select id="category" value={category} onChange={handleCategoryChange}>
-          <option value="general">General</option>
-          <option value="business">Business</option>
-          <option value="entertainment">Entertainment</option>
-          <option value="health">Health</option>
-          <option value="technology">Technology</option>
-          </select>
-          </div>
-          </div>
-
-          {isLoading ? (
-        <p>Loading...</p>
-      ) : (
-        <div className="news-list">
-          {articles.map((article, index) => (
-            <NewsCard
-              key={index}
-              title={article.title}
-              description={article.summary}
-              image={article.media}
-              url={article.link}
+    return (
+      // Search bar and filter bar
+      
+      <div className="news-container">
+        <div className='cat-key'>
+        <form onSubmit={handleSearch}>
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Search by keywords..."
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
             />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
+            <button type="submit" className="search-button">
+              Search
+            </button>
+          </div>
+        </form>
 
-export default NewsPage;
+        <div className="filter-container">
+          <label htmlFor="category" style={{color:'red', fontStyle:'bold'}}>Filter by category:</label>
+          <select id="category" value={category} onChange={handleCategoryChange}>
+            <option value="general">General</option>
+            <option value="business">Business</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="health">Health</option>
+            <option value="technology">Technology</option>
+            <option value="Finance">Finance</option>
+            </select>
+            </div>
+            </div>
 
+            {isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <div className="news-list">
+            {articles.map((article, index) => (
+              <NewsCard
+                key={index}
+                title={article.title}
+                description={truncateDescription(article.summary)}
+                image={article.media}
+                url={article.link}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  export default NewsPage;
 
