@@ -36,9 +36,9 @@
 }
 
 .card :hover{
-  color: rgb(245, 4, 4);
+  color: wheat;
   background-color: #79838d;
-  font-weight: 600;
+  
 }
 
 .filter-container {
