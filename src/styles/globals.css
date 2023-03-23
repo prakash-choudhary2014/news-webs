@@ -90,7 +90,7 @@ h1{
   display: flex;
   align-items: center;
   height: 44px;
-  width: 240px;
+  width: 210px;
   border: 1px solid #dfe1e5;
   border-radius: 24px;
   padding: 0 12px;
@@ -109,19 +109,27 @@ h1{
 
 
 
-@media screen and (min-width: 480px) {
+@media only screen and (min-width: 600px) {
   .filter-container {
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
   }
 
   .filter-container label {
-    margin-right: 1rem;
+    margin-right: 0.5rem;
   }
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 860px) {
   .filter-container label {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
   }
+
+  .search-container{
+    margin-left: 150px;
+  }
+  .filter-container {
+margin-right: 150px;
+flex-direction: row;
 }
+ }
