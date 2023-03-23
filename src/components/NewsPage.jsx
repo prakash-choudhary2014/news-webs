@@ -193,7 +193,7 @@
               type="text"
               placeholder="Search by keywords..."
               value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
+              onChange={(event) => setSearchQuery(event.target.value)} style={{width:130}}
             />
             <button type="submit" className="search-button">
               Search
@@ -202,8 +202,8 @@
         </form>
 
         <div className="filter-container">
-          <label htmlFor="category" style={{color:'red', fontStyle:'bold'}}>Filter by category:</label>
-          <select id="category" value={category} onChange={handleCategoryChange}>
+          <label htmlFor="category"  style={{fontWeight:700}}>Filter by category:</label>
+          <select id="category" value={category} onChange={handleCategoryChange} style={{marginLeft:15}}>
             <option value="general">General</option>
             <option value="business">Business</option>
             <option value="entertainment">Entertainment</option>
